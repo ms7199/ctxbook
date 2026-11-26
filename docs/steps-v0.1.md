@@ -18,7 +18,7 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 
 ## Gate — before any code
 - [x] **G1** 👤 Decisions D1–D16 in [decisions.md](decisions.md) accepted or changed.
-- [ ] **G2** 👤 `git push` works as ms7199 (token). *Verify:* `git ls-remote origin` succeeds.
+- [x] **G2** 👤 `git push` works as ms7199 (token). *Verify:* `git ls-remote origin` succeeds.
 
 ## M0 — Scaffolding
 - [x] **0.1** Rename `CLAUDE.MD` -> `CLAUDE.md`. *Verify:* `git ls-files | grep -i claude` shows `CLAUDE.md`.
@@ -29,7 +29,7 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 - [x] **0.5** Ruff + pre-commit config. *Verify:* `uv run ruff check . && uv run ruff format --check .`
 - [x] **0.6** pytest config + one smoke test. *Verify:* `uv run pytest`.
 - [x] **0.7** `Makefile` with `test`, `lint`, `eval` (eval prints "no eval yet", exit 0). *Verify:* `make test lint eval`.
-- [ ] **0.8** GitHub Actions: lint + tests, ubuntu/macos/windows × 3.11/3.12.
+- [x] **0.8** GitHub Actions: lint + tests, ubuntu/macos/windows × 3.11/3.12.
       *Verify:* 👤 after push, all 6 jobs green on GitHub.
 - [ ] Commit `chore: scaffold project`.
 

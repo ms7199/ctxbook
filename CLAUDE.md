@@ -274,9 +274,10 @@ The rule text (same everywhere, also used as the server `instructions`):
 | fastembed API, normalisation, timings, offline behaviour, similarity scale (section 6) | Installed source + real model run; `HF_HUB_OFFLINE=1` runs |
 | fastembed download keeps stdout clean (progress goes to stderr) | `tests/unit/test_fastembed_embedder.py` slow test with `capfd` |
 | platformdirs 4.14.8 `user_data_dir/user_cache_dir(appname, appauthor=False)` | Installed signature; macOS paths printed |
+| sqlite-vec 0.1.9 + full suite on **Apple Silicon macOS, Windows, Linux** (Python 3.11 and 3.12, uv-managed) | GitHub Actions run 45807523610: 7/7 jobs green, 269 passed, 0 skipped |
+| Numpy fallback + keyword-only (no fastembed) paths on a Python without extension loading | python.org 3.14 on Intel Mac: 221 passed, 48 skipped (backend-specific), 0 failed |
 
 ### Still unverified (check before relying on it)
-- sqlite-vec loading on **Windows** and **Apple Silicon macOS** -> CI matrix.
 - fastembed download time and speed on Apple Silicon, Windows and Linux laptops (Intel Mac measured, section 6).
 - Whether Claude Desktop, Cursor and Antigravity pass the server `instructions` to the model.
 - The exact client-info names each app sends (needed for nice `source_app` labels).
