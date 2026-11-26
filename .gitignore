@@ -1,0 +1,76 @@
+# ── Python ────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Packaging / build
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+wheels/
+pip-wheel-metadata/
+
+# Virtual environments (uv creates .venv). Keep uv.lock committed.
+.venv/
+venv/
+env/
+.python-version.local
+
+# ── Testing / quality tools ───────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.hypothesis/
+
+# ── Docs (MkDocs build output) ────────────────────────
+site/
+
+# ── ctxbook local data ────────────────────────────────
+# Memory databases (incl. SQLite WAL side files) and model caches
+# must never be committed: they hold personal data.
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+fastembed_cache/
+.ctxbook/
+*.ctxbook-backup*
+
+# Exports (personal memory dumps)
+ctxbook-export*.jsonl
+
+# ── Evaluation ────────────────────────────────────────
+# Raw downloaded datasets (license unverified, see docs/decisions.md D14)
+eval/datasets/raw/
+eval/.cache/
+# Results ARE committed: eval/results/
+
+# ── Secrets / local config ────────────────────────────
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+
+# ── Editors / OS ──────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
