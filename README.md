@@ -284,6 +284,14 @@ this mode, but everything works.
 </details>
 
 <details>
+<summary><b>Intel Mac with Python 3.14: why is search keyword-only?</b></summary>
+
+The embedding runtime (onnxruntime) has no Intel-Mac build for Python 3.14+, so ctxbook installs
+without it and runs in keyword-only mode. For full search, run it on Python 3.12:
+`uvx --python 3.12 ctxbook init`. `ctxbook doctor` tells you which mode is active.
+</details>
+
+<details>
 <summary><b>macOS: "sqlite3.Connection has no attribute enable_load_extension"</b></summary>
 
 The macOS system Python can't load SQLite extensions. ctxbook falls back automatically to a

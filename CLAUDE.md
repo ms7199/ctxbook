@@ -61,7 +61,9 @@ Versions below are what was installed and tested on 2026-11-26. Use them as lowe
 | `typer` | 0.29 | CLI |
 | uv | 0.11 | project and install tool |
 
-Dev: pytest, Ruff (lint + format), pre-commit. Docs: MkDocs Material. CI/CD: GitHub Actions; release to PyPI on version tag + Docker image.
+**Intel Mac (x86_64) [verified 2026-11-26 via PyPI file lists and `uv sync`]:** onnxruntime's last Intel-Mac wheels are **1.23.2** (cp310–cp313); 1.24+ ships none. fastembed 0.9.1 accepts 1.23.2 on Python 3.11–3.13 but requires `>=1.24.2` on 3.14, so fastembed **cannot install on Intel Mac + Python 3.14+**. Handled by a dependency marker + `tool.uv.required-environments` in `pyproject.toml` (decision D17). Code must treat fastembed as possibly missing (ImportError -> keyword-only with a clear message).
+
+Dev: pytest, Ruff (lint + format), pre-commit. Ruff 0.17 also formats code blocks inside Markdown, so `*.md` is excluded in `pyproject.toml`. Docs: MkDocs Material. CI/CD: GitHub Actions; release to PyPI on version tag + Docker image.
 `platformdirs` is **not** a transitive dependency; ask before adding it (useful for cross-platform data/cache paths).
 
 ## 5. Verified API facts — MCP Python SDK 2.3.0 [verified 2026-11-26]
@@ -255,6 +257,8 @@ The rule text (same everywhere, also used as the server `instructions`):
 | Antigravity MCP config and rules paths | antigravity.google/docs/mcp, /docs/rules, /docs/customization-discovery |
 | LongMemEval contents | arXiv 2410.10813, ICLR 2025 page, project README |
 | MCP Inspector exists on npm | `npm view @modelcontextprotocol/inspector` |
+| onnxruntime has no Intel-Mac wheels after 1.23.2; fastembed blocked on Intel Mac + Py3.14 | PyPI JSON file lists; `uv sync` on macOS 26.2 x86_64 |
+| uv-managed CPython 3.12.16 installs and runs the project on Intel macOS 26.2 | `uv python install 3.12`, `uv sync`, `uv run pytest` |
 
 ### Still unverified (check before relying on it)
 - sqlite-vec loading on **macOS** (uv-managed Python) and **Windows** -> CI matrix.
