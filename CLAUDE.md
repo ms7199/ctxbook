@@ -119,7 +119,8 @@ db.execute("pragma journal_mode=wal")
 #           pack: sqlite_vec.serialize_float32(list_of_floats)
 # keywords: create virtual table memory_fts using fts5(content)   ... order by rank
 ```
-- **macOS system Python** is built without extension loading and fails with `AttributeError: 'sqlite3.Connection' object has no attribute 'enable_load_extension'` (documented by the sqlite-vec docs and Simon Willison). Homebrew Python works. **[unverified]** whether uv-managed Python on macOS works.
+- **macOS system Python** is built without extension loading and fails with `AttributeError: 'sqlite3.Connection' object has no attribute 'enable_load_extension'` (documented by the sqlite-vec docs and Simon Willison). Homebrew Python works. **uv-managed Python on macOS works** [verified 2026-11-26: CPython 3.12.16, SQLite 3.53.1, macOS 26.2 x86_64].
+- **Cosine metric** [verified 2026-11-26]: `vec0(embedding float[N] distance_metric=cosine)` returns cosine *distance* (1 - cosine similarity; [1,1,0] vs [1,0,0] = 0.2929). Rows are deleted with `delete from <table> where rowid = ?`. A KNN query can be restricted with `and rowid in (...)` alongside `match` and `k`, including a subquery (`rowid in (select id from memories where scope = ? and status = 'active')`); the filter applies before `k`. **`k` is capped at 4096** (larger raises an error).
 - **Windows:** early sqlite-vec alpha versions had DLL loading bugs (GitHub issues #13, #45). **[unverified]** for 0.1.9.
 - **Required fallback:** if loading the extension fails for any reason, `storage/` must switch to storing vectors as BLOBs in a normal table and computing cosine similarity in Python with numpy. Log one clear warning. Fine for a personal memory of a few thousand facts. `ctxbook doctor` reports which mode is active.
 
@@ -261,7 +262,7 @@ The rule text (same everywhere, also used as the server `instructions`):
 | uv-managed CPython 3.12.16 installs and runs the project on Intel macOS 26.2 | `uv python install 3.12`, `uv sync`, `uv run pytest` |
 
 ### Still unverified (check before relying on it)
-- sqlite-vec loading on **macOS** (uv-managed Python) and **Windows** -> CI matrix.
+- sqlite-vec loading on **Windows** and **Apple Silicon macOS** -> CI matrix.
 - fastembed real download time and speed on a laptop.
 - Whether Claude Desktop, Cursor and Antigravity pass the server `instructions` to the model.
 - The exact client-info names each app sends (needed for nice `source_app` labels).

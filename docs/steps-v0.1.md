@@ -34,18 +34,18 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 - [ ] Commit `chore: scaffold project`.
 
 ## M1 — Storage
-- [ ] **1.1** 🔬 Spike on this Mac with uv Python: sqlite-vec loads; `vec0(... distance_metric=cosine)` syntax
+- [x] **1.1** 🔬 Spike on this Mac with uv Python: sqlite-vec loads; `vec0(... distance_metric=cosine)` syntax
       works in 0.1.9 and returns cosine distance; FTS5 present. *Verify:* spike output recorded in CLAUDE.md §6/§14.
-- [ ] **1.2** `models.py`: `Status` enum, `Memory`, `Event` (Pydantic). *Verify:* unit tests.
-- [ ] **1.3** `storage/base.py`: `MemoryStore` + `VectorIndex` protocols. *Verify:* `ruff` + import test.
-- [ ] **1.4** Connection: WAL, `busy_timeout`, extension load with fallback, schema v1, `meta`.
+- [x] **1.2** `models.py`: `Status` enum, `Memory`, `Event` (Pydantic). *Verify:* unit tests.
+- [x] **1.3** `storage/base.py`: `MemoryStore` + `VectorIndex` protocols. *Verify:* `ruff` + import test.
+- [x] **1.4** Connection: WAL, `busy_timeout`, extension load with fallback, schema v1, `meta`.
       *Verify:* tests — fresh DB has all tables + meta; reopening is a no-op; wrong `embed_dim` is refused.
-- [ ] **1.5** Memory CRUD + status changes, each writing `memory_events` in the same transaction.
+- [x] **1.5** Memory CRUD + status changes, each writing `memory_events` in the same transaction.
       *Verify:* tests for every status transition + event row.
-- [ ] **1.6** FTS5 kept in sync (insert, deactivate). *Verify:* keyword search tests.
-- [ ] **1.7** `SqliteVecIndex`. *Verify:* KNN tests on a fixed dataset.
-- [ ] **1.8** `NumpyIndex` fallback + a setting to force it. *Verify:* both indexes return identical top-k on the same dataset.
-- [ ] **1.9** Two processes writing at once. *Verify:* concurrency test passes, no `database is locked`.
+- [x] **1.6** FTS5 kept in sync (insert, deactivate). *Verify:* keyword search tests.
+- [x] **1.7** `SqliteVecIndex`. *Verify:* KNN tests on a fixed dataset.
+- [x] **1.8** `NumpyIndex` fallback + a setting to force it. *Verify:* both indexes return identical top-k on the same dataset.
+- [x] **1.9** Two processes writing at once. *Verify:* concurrency test passes, no `database is locked`.
 - [ ] Commit `feat(storage): sqlite store with vector fallback`.
 
 ## M2 — Embeddings + ranking
