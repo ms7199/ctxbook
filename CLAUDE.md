@@ -128,7 +128,9 @@ db.execute("pragma journal_mode=wal")
 - Default model: `BAAI/bge-small-en-v1.5`, **384 dimensions, about 0.067 GB**, downloaded from Hugging Face (`Qdrant/bge-small-en-v1.5-onnx-Q`). License MIT (per fastembed's model list).
 - **Default cache is the system temp folder** (`tempfile.gettempdir()/fastembed_cache`, or `FASTEMBED_CACHE_PATH`). Temp folders get cleared, which would re-download the model. **Always pass `cache_dir=`** pointing at ctxbook's own data/cache folder.
 - When Hugging Face is unreachable, fastembed raises `ValueError: Could not load model ... from any source.` (seen in a network-restricted sandbox). Catch it, explain it in plain words, and suggest `--no-embeddings`. Company firewalls will hit this.
-- **[unverified]** real download time and embedding speed on a laptop; measure on first run and put numbers in the docs.
+- **API** [verified 2026-11-26 from installed source]: `TextEmbedding(model_name, cache_dir=..., threads=..., lazy_load=...)`; `embed(texts)`, `query_embed(q)` and `passage_embed(texts)` return generators of numpy arrays. Outputs are **already L2-normalised** float32. For bge-small, `query_embed` is identical to `embed` (no query prefix is added).
+- **Measured** [2026-11-26, Intel Mac x86_64, macOS 26.2, Python 3.12.16]: first download + load **13.4 s** (64 MB on disk); cached load **0.36 s**; 200 facts in **0.31 s**; one query **4.1 ms**. A cached model loads with the network off (`HF_HUB_OFFLINE=1`). On failure fastembed also logs loguru `ERROR` lines to stderr.
+- **Similarity scale** (bge-small, cosine): unrelated facts still score about **0.46**; "orders uses Postgres" vs "orders moved to MongoDB" **0.82**; paraphrase "Deploys happen on Fridays" vs "We deploy every Friday" **0.89**; same text + trailing period **0.98**. The 0.60 lower threshold has a thin margin: tune it with the eval.
 - The embedding dimension is stored in the DB metadata; changing the model requires re-embedding. Refuse to mix dimensions.
 
 ## 7. How it works (the design to implement)
@@ -260,10 +262,14 @@ The rule text (same everywhere, also used as the server `instructions`):
 | MCP Inspector exists on npm | `npm view @modelcontextprotocol/inspector` |
 | onnxruntime has no Intel-Mac wheels after 1.23.2; fastembed blocked on Intel Mac + Py3.14 | PyPI JSON file lists; `uv sync` on macOS 26.2 x86_64 |
 | uv-managed CPython 3.12.16 installs and runs the project on Intel macOS 26.2 | `uv python install 3.12`, `uv sync`, `uv run pytest` |
+| sqlite-vec cosine metric, subquery-filtered KNN, k limit 4096 (section 6) | Spike scripts on Intel macOS, uv Python 3.12.16 |
+| fastembed API, normalisation, timings, offline behaviour, similarity scale (section 6) | Installed source + real model run; `HF_HUB_OFFLINE=1` runs |
+| fastembed download keeps stdout clean (progress goes to stderr) | `tests/unit/test_fastembed_embedder.py` slow test with `capfd` |
+| platformdirs 4.14.8 `user_data_dir/user_cache_dir(appname, appauthor=False)` | Installed signature; macOS paths printed |
 
 ### Still unverified (check before relying on it)
 - sqlite-vec loading on **Windows** and **Apple Silicon macOS** -> CI matrix.
-- fastembed real download time and speed on a laptop.
+- fastembed download time and speed on Apple Silicon, Windows and Linux laptops (Intel Mac measured, section 6).
 - Whether Claude Desktop, Cursor and Antigravity pass the server `instructions` to the model.
 - The exact client-info names each app sends (needed for nice `source_app` labels).
 - Cursor global User Rules file location; Antigravity `rules/*.md` trigger values.

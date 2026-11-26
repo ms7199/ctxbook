@@ -49,14 +49,14 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 - [ ] Commit `feat(storage): sqlite store with vector fallback`.
 
 ## M2 — Embeddings + ranking
-- [ ] **2.1** `Embedder` protocol + deterministic `FakeEmbedder` for tests. *Verify:* unit tests.
-- [ ] **2.2** 🔬 Spike fastembed 0.9.1: `TextEmbedding(model_name, cache_dir)` signature, output type,
+- [x] **2.1** `Embedder` protocol + deterministic `FakeEmbedder` for tests. *Verify:* unit tests.
+- [x] **2.2** 🔬 Spike fastembed 0.9.1: `TextEmbedding(model_name, cache_dir)` signature, output type,
       whether vectors are already normalised, offline error. *Verify:* recorded in CLAUDE.md §6.
-- [ ] **2.3** `FastembedEmbedder` (cache in ctxbook dir, download notice, friendly offline error).
+- [x] **2.3** `FastembedEmbedder` (cache in ctxbook dir, download notice, friendly offline error).
       *Verify:* unit test with mocked failure; `slow` test with the real model (run locally; note download time).
-- [ ] **2.4** `NoEmbedder` (keyword-only). *Verify:* test proves fastembed is never imported in this mode.
-- [ ] **2.5** `paths.py` (D7) with `CTXBOOK_HOME` override. *Verify:* tests on fake home dirs.
-- [ ] **2.6** `ranking.py`: RRF, recency boost, token budget. *Verify:* tests with hand-computed expected values.
+- [x] **2.4** `NoEmbedder` (keyword-only). *Verify:* test proves fastembed is never imported in this mode.
+- [x] **2.5** `paths.py` (D7) with `CTXBOOK_HOME` override. *Verify:* tests on fake home dirs.
+- [x] **2.6** `ranking.py`: RRF, recency boost, token budget. *Verify:* tests with hand-computed expected values.
 - [ ] Commit `feat: embeddings and hybrid ranking`.
 
 ## M3 — Service + conflict handling
