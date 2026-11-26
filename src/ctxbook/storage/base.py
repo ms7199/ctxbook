@@ -97,4 +97,22 @@ class MemoryStore(Protocol):
 
     def counts(self) -> dict[Status, int]: ...
 
+    # ── import support ───────────────────────────────────────────────────
+
+    def insert_raw(self, memory: Memory, events: Sequence[Event]) -> int:
+        """Insert a fact with its original timestamps, status and events; returns the new id.
+
+        ``memory.id``, ``memory.superseded_by`` and the events' ids are ignored (ids differ
+        between databases); link versions afterwards with ``link_superseded``.
+        """
+        ...
+
+    def find_exact(
+        self, *, content: str, scope: str, source_app: str, created_at: datetime
+    ) -> int | None:
+        """Id of a fact identical in content, scope, app and creation time, if any."""
+        ...
+
+    def link_superseded(self, memory_id: int, superseded_by: int) -> None: ...
+
     def close(self) -> None: ...

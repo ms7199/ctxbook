@@ -84,11 +84,11 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 - [ ] Commit `feat(server): six MCP tools`.
 
 ## M5 — CLI
-- [ ] **5.1** `serve --transport stdio|http`; refuses non-localhost hosts. *Verify:* CliRunner tests.
-- [ ] **5.2** HTTP keeps Host/Origin protection. *Verify:* test expects 403 / 421 like §5.
-- [ ] **5.3** `save "fact" --scope X`. *Verify:* test.
-- [ ] **5.4** `export` / `import` JSONL (D13). *Verify:* round-trip equality test; import twice = no duplicates.
-- [ ] **5.5** `doctor`. *Verify:* test output in normal, fallback and keyword-only modes.
+- [x] **5.1** `serve --transport stdio|http`; refuses non-localhost hosts. *Verify:* CliRunner tests.
+- [x] **5.2** HTTP keeps Host/Origin protection. *Verify:* test expects 403 / 421 like §5.
+- [x] **5.3** `save "fact" --scope X`. *Verify:* test.
+- [x] **5.4** `export` / `import` JSONL (D13). *Verify:* round-trip equality test; import twice = no duplicates.
+- [x] **5.5** `doctor`. *Verify:* test output in normal, fallback and keyword-only modes.
 - [ ] Commit `feat(cli): serve, save, export, import, doctor`.
 
 ## M6 — `init`

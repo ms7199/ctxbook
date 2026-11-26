@@ -138,6 +138,10 @@ class SqliteStore:
     def vector_backend(self) -> str:
         return self._index.name
 
+    @property
+    def sqlite_version(self) -> str:
+        return sqlite3.sqlite_version
+
     @contextmanager
     def transaction(self) -> Iterator[None]:
         if self._depth == 0:
@@ -388,6 +392,55 @@ class SqliteStore:
         for row in self._db.execute("select status, count(*) from memories group by status"):
             result[Status(row[0])] = int(row[1])
         return result
+
+    # ── import support ───────────────────────────────────────────────────
+
+    def insert_raw(self, memory: Memory, events: Sequence[Event]) -> int:
+        with self.transaction():
+            cursor = self._db.execute(
+                "insert into memories(content, scope, source_app, status, created_at, "
+                "updated_at) values (?, ?, ?, ?, ?, ?)",
+                (
+                    memory.content,
+                    memory.scope,
+                    memory.source_app,
+                    memory.status.value,
+                    _ts(memory.created_at),
+                    _ts(memory.updated_at),
+                ),
+            )
+            memory_id = int(cursor.lastrowid or 0)
+            if memory.status is not Status.DELETED:
+                self._db.execute(
+                    "insert into memory_fts(rowid, content) values (?, ?)",
+                    (memory_id, memory.content),
+                )
+            for event in events:
+                self._log(
+                    memory_id,
+                    event.action,
+                    source_app=event.source_app,
+                    now=event.created_at,
+                    old=event.old,
+                    new=event.new,
+                )
+        return memory_id
+
+    def find_exact(
+        self, *, content: str, scope: str, source_app: str, created_at: datetime
+    ) -> int | None:
+        row = self._db.execute(
+            "select id from memories where content = ? and scope = ? and source_app = ? "
+            "and created_at = ? order by id limit 1",
+            (content, scope, source_app, _ts(created_at)),
+        ).fetchone()
+        return None if row is None else int(row[0])
+
+    def link_superseded(self, memory_id: int, superseded_by: int) -> None:
+        with self.transaction():
+            self._db.execute(
+                "update memories set superseded_by = ? where id = ?", (superseded_by, memory_id)
+            )
 
     def close(self) -> None:
         self._db.close()
