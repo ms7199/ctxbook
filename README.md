@@ -10,7 +10,7 @@ and any other [MCP](https://modelcontextprotocol.io) client.
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![MCP](https://img.shields.io/badge/MCP-server-8A2BE2.svg)](https://modelcontextprotocol.io)
-[![Status: pre-release](https://img.shields.io/badge/status-pre--release-orange.svg)](#-status)
+[![Status: pre-release](https://img.shields.io/badge/status-pre--release-orange.svg)](docs/steps-v0.1.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 [Quickstart](#-quickstart) ·
@@ -25,8 +25,11 @@ and any other [MCP](https://modelcontextprotocol.io) client.
 
 > [!WARNING]
 > **🚧 Pre-release.** ctxbook is being built in the open and **v0.1 is not on PyPI yet**.
-> The commands below show how it will work once released. Star or watch the repo to know when it ships,
-> or jump to [Contributing](#-contributing) to help build it.
+> **Built and tested so far:** storage with fact history, hybrid search, conflict handling, the 6 MCP
+> tools, and the `serve` / `save` / `export` / `import` / `doctor` commands.
+> **Next:** `ctxbook init` (automatic client setup), the evaluation, then the PyPI release.
+> Progress is tracked in [docs/steps-v0.1.md](docs/steps-v0.1.md). Until the release, the `uvx` commands
+> below won't work yet; to try it now, [run it from source](#-contributing).
 
 ## 🤔 The problem
 
@@ -128,6 +131,10 @@ flowchart TD
 ```
 
 ctxbook doesn't need its own LLM to judge a conflict. The AI you're already talking to makes the call.
+If a flagged fact is never resolved, it is accepted automatically after 7 days, so nothing is lost.
+
+Search looks in the current project's scope **and** the `global` scope (facts about you), and returns
+only current versions.
 
 ### MCP tools
 
@@ -137,7 +144,7 @@ ctxbook doesn't need its own LLM to judge a conflict. The AI you're already talk
 | `search_memory` | Find relevant facts for the current task (hybrid search, token-budgeted results). |
 | `resolve_memory` | Settle a possible conflict: `new`, `duplicate`, `update` or `contradiction`. |
 | `update_memory` | Replace a fact with a new version; the old one is kept in history. |
-| `forget_memory` | Remove a fact you no longer want stored. |
+| `forget_memory` | Stop a fact from ever appearing in search (its history record is kept). |
 | `get_fact_history` | See how a fact changed over time and which tool changed it. |
 
 ## 🛠️ Manual setup (per client)
@@ -222,7 +229,7 @@ Use stdio with `uvx ctxbook serve`, or Streamable HTTP with
 | `ctxbook serve` | Run the MCP server (stdio by default). |
 | `ctxbook save "fact" --scope myproject` | Save a fact by hand. |
 | `ctxbook export` / `ctxbook import` | Back up or move your memory. |
-| `ctxbook doctor` | Check storage, embeddings and client configs. |
+| `ctxbook doctor` | Check storage, vector search, embeddings and unresolved facts (changes nothing). |
 
 ## 🔒 Privacy & security
 
@@ -272,8 +279,17 @@ it is stored locally in a file you own, and it keeps a version history when fact
 <details>
 <summary><b>Where is my data stored? Can I back it up?</b></summary>
 
-In a local SQLite file (`ctxbook doctor` prints the path). Use `ctxbook export` to back it up
-and `ctxbook import` to restore or move it.
+In one local SQLite file, `memory.db` (`ctxbook doctor` prints the exact path):
+
+| OS | Data | Model cache |
+|---|---|---|
+| macOS | `~/Library/Application Support/ctxbook/` | `~/Library/Caches/ctxbook/` |
+| Linux | `~/.local/share/ctxbook/` | `~/.cache/ctxbook/` |
+| Windows | `%LOCALAPPDATA%\ctxbook\` | `%LOCALAPPDATA%\ctxbook\Cache\` |
+
+Set `CTXBOOK_HOME=/some/folder` to keep everything in one folder instead.
+Use `ctxbook export backup.jsonl` to back up (full history included) and `ctxbook import backup.jsonl`
+to restore or move it. Importing the same file twice adds nothing.
 </details>
 
 <details>

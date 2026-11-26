@@ -63,13 +63,14 @@ Versions below are what was installed and tested on 2026-11-26. Use them as lowe
 
 **Intel Mac (x86_64) [verified 2026-11-26 via PyPI file lists and `uv sync`]:** onnxruntime's last Intel-Mac wheels are **1.23.2** (cp310–cp313); 1.24+ ships none. fastembed 0.9.1 accepts 1.23.2 on Python 3.11–3.13 but requires `>=1.24.2` on 3.14, so fastembed **cannot install on Intel Mac + Python 3.14+**. Handled by a dependency marker + `tool.uv.required-environments` in `pyproject.toml` (decision D17). Code must treat fastembed as possibly missing (ImportError -> keyword-only with a clear message).
 
-Dev: pytest, Ruff (lint + format), pre-commit. Ruff 0.17 also formats code blocks inside Markdown, so `*.md` is excluded in `pyproject.toml`. Docs: MkDocs Material. CI/CD: GitHub Actions; release to PyPI on version tag + Docker image.
-`platformdirs` is **not** a transitive dependency; ask before adding it (useful for cross-platform data/cache paths).
+Dev: pytest, Ruff (lint + format), pre-commit. Ruff 0.17 also formats code blocks inside Markdown, so `*.md` is excluded in `pyproject.toml`. Docs: MkDocs Material. CI/CD: GitHub Actions; release to PyPI on version tag. Docker is deferred to v0.2 (decision D11).
+Also direct dependencies: `platformdirs` (data/cache paths, decision D7) and `numpy` (vector fallback).
 
 ## 5. Verified API facts — MCP Python SDK 2.3.0 [verified 2026-11-26]
 
 These were confirmed by running a server and client, not from tutorials.
 
+Illustrative snippet (the real tools and result models are in `src/ctxbook/server/app.py` and `src/ctxbook/models.py`):
 ```python
 from mcp.server.mcpserver import Context, MCPServer   # v2 name. `mcp.server.fastmcp` raises ModuleNotFoundError.
 from pydantic import BaseModel
@@ -145,9 +146,11 @@ meta            key, value                         (schema_version, embed_model,
 memories        id, content, scope, source_app, status, superseded_by, created_at, updated_at
 memory_vectors  id, embedding                      (sqlite-vec, or BLOB table in fallback mode)
 memory_fts      id, content                        (FTS5)
-memory_events   memory_id, action, old, new, source_app, created_at
+memory_events   id, memory_id, action, old, new, source_app, created_at
 ```
 `status` is one of: `active`, `pending`, `superseded`, `deleted`.
+Schema v1 is implemented in `src/ctxbook/storage/sqlite_store.py` and is now committed: changing it needs approval (hard rule 8) and a migration.
+Settled semantics (see `docs/decisions.md`): `update_memory` makes a new version and supersedes the old one (D2); `forget_memory` sets `deleted` and removes the fact from both indexes but keeps its history (D3); unresolved pending facts are auto-accepted after 7 days (D5); search covers the scope plus `global` (D6).
 `source_app` comes from the client info (section 5), not from the AI; `"unknown"` if absent.
 
 ### Save flow (keyless conflict handling)
@@ -183,10 +186,12 @@ The model decides *whether* to call a tool from its description (the docstring).
 
 ```bash
 uv sync                       # install deps
-uv run pytest                 # tests
+uv run pytest                 # tests (skips slow ones)
+uv run pytest -m slow         # tests that download the real embedding model (~64 MB, once)
 uv run ruff check . && uv run ruff format .
 uv run ctxbook serve          # run the server (stdio)
-uv run ctxbook doctor         # check sqlite-vec, embeddings, client configs
+uv run ctxbook doctor         # check sqlite-vec, embeddings, database (client configs: M6)
+CTXBOOK_HOME=/tmp/x uv run ctxbook ...   # use a throwaway data folder instead of the real one
 npx @modelcontextprotocol/inspector uv run ctxbook serve   # manual tool testing (Inspector is on npm, v2.16.0 seen 2026-11-26; needs Node.js)
 make eval                     # run the evaluation
 ```
