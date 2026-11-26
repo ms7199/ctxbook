@@ -102,6 +102,8 @@ Confirmed behaviour:
 - `ctx.request_context.connection` does **not** exist (AttributeError). Use `ctx.session`.
 - **Tests:** `from mcp import Client` then `async with Client(server) as c:` runs fully in-memory (no subprocess). Use it for integration tests. `Client(StdioServerParameters(...))` tests the real stdio path.
 - Streamable HTTP bound to 127.0.0.1 with default settings **rejected** a request with `Origin: http://evil.example` (HTTP 403) and a request with `Host: evil.example` (HTTP 421). Keep these defaults.
+- **Tool errors** [verified 2026-11-26]: raising `ToolError` (`from mcp.server.mcpserver.exceptions import ToolError`) gives the client `is_error=True` and text `"Error executing tool <name>: <message>"`. **Any other exception hides its message** (client sees only `"Error executing tool <name>"`) and the SDK logs a large traceback to stderr. Always convert expected errors to `ToolError`.
+- `MCPServer(name, instructions=..., version=..., lifespan=...)`; `@server.tool(annotations=mcp.types.ToolAnnotations(readOnlyHint=True))` (camelCase keyword, as tested; the model field prints as `read_only_hint`) is accepted and shown in `list_tools`. Sync and async tool functions both work. Bad argument types are rejected before the function runs (`is_error=True`, pydantic message).
 - SDK auth (`auth=AuthSettings(...)`, `token_verifier=...`) is OAuth-shaped: `AuthSettings` requires `issuer_url` and `resource_server_url`. That is v0.2 work.
 
 ## 6. Storage and embeddings — verified facts

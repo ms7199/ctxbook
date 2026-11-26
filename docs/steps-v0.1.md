@@ -72,13 +72,13 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 - [ ] Commit `feat(core): memory service with conflict handling`.
 
 ## M4 — MCP server
-- [ ] **4.1** 🔬 Spike: re-confirm §5 against the installed SDK (`MCPServer`, `@server.tool()`, `Context`,
+- [x] **4.1** 🔬 Spike: re-confirm §5 against the installed SDK (`MCPServer`, `@server.tool()`, `Context`,
       in-memory `Client`). *Verify:* spike runs.
-- [ ] **4.2** `server/app.py`: 6 tools, prompt-style docstrings, Pydantic outputs, `instructions` = memory rule.
-- [ ] **4.3** In-memory integration tests for all 6 tools. *Verify:* `structured_content` present on every result.
-- [ ] **4.4** Missing client info -> `source_app == "unknown"`. *Verify:* test.
-- [ ] **4.5** `tests/security/`: injection text comes back only as labelled data; limits enforced. *Verify:* tests.
-- [ ] **4.6** One real stdio test. *Verify:* test.
+- [x] **4.2** `server/app.py`: 6 tools, prompt-style docstrings, Pydantic outputs, `instructions` = memory rule.
+- [x] **4.3** In-memory integration tests for all 6 tools. *Verify:* `structured_content` present on every result.
+- [x] **4.4** Missing client info -> `source_app == "unknown"`. *Verify:* test.
+- [x] **4.5** `tests/security/`: injection text comes back only as labelled data; limits enforced. *Verify:* tests.
+- [x] **4.6** One real stdio test. *Verify:* test.
 - [ ] **4.7** 👤 MCP Inspector manual pass (needs Node.js); connect from Claude Code and note the client name it sends.
       *Verify:* names recorded in CLAUDE.md §14.
 - [ ] Commit `feat(server): six MCP tools`.

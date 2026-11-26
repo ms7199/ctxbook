@@ -85,7 +85,9 @@ class SqliteStore:
         if (embed_model is None) != (embed_dim is None):
             raise ValueError("embed_model and embed_dim must both be set or both be None")
         self.path = str(path)
-        self._db = sqlite3.connect(self.path, isolation_level=None)
+        # The MCP server calls the store from worker threads, one call at a time (it holds a
+        # lock), so the connection may move between threads but is never used concurrently.
+        self._db = sqlite3.connect(self.path, isolation_level=None, check_same_thread=False)
         self._db.row_factory = sqlite3.Row
         self._depth = 0
         self._db.execute(f"pragma busy_timeout = {int(busy_timeout_ms)}")
