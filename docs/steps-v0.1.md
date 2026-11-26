@@ -60,15 +60,15 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 - [ ] Commit `feat: embeddings and hybrid ranking`.
 
 ## M3 — Service + conflict handling
-- [ ] **3.1** `config.py` (thresholds, limits D8, expiry D5). *Verify:* import test.
-- [ ] **3.2** `safety.py`: length/limit checks, wrap-as-data. *Verify:* unit tests.
-- [ ] **3.3** `save`: saved / duplicate / needs_resolution; keyword-mode rule D9. *Verify:* one test per outcome, both modes.
-- [ ] **3.4** `resolve`: new / duplicate / update / contradiction; target-not-active error. *Verify:* tests per decision.
-- [ ] **3.5** `update` (D2) and `forget` (D3). *Verify:* tests incl. forgotten fact never returned by search.
-- [ ] **3.6** `history`. *Verify:* chain of 3 versions returned in order with source apps.
-- [ ] **3.7** `search` over scope + global (D6). *Verify:* scope isolation + global inclusion tests.
-- [ ] **3.8** Pending expiry (D5). *Verify:* test with an injected clock.
-- [ ] **3.9** Two conflicting resolves on one target. *Verify:* exactly one wins, the other gets a clear error.
+- [x] **3.1** `config.py` (thresholds, limits D8, expiry D5). *Verify:* import test.
+- [x] **3.2** `safety.py`: length/limit checks, wrap-as-data. *Verify:* unit tests.
+- [x] **3.3** `save`: saved / duplicate / needs_resolution; keyword-mode rule D9. *Verify:* one test per outcome, both modes.
+- [x] **3.4** `resolve`: new / duplicate / update / contradiction; target-not-active error. *Verify:* tests per decision.
+- [x] **3.5** `update` (D2) and `forget` (D3). *Verify:* tests incl. forgotten fact never returned by search.
+- [x] **3.6** `history`. *Verify:* chain of 3 versions returned in order with source apps.
+- [x] **3.7** `search` over scope + global (D6). *Verify:* scope isolation + global inclusion tests.
+- [x] **3.8** Pending expiry (D5). *Verify:* test with an injected clock.
+- [x] **3.9** Two conflicting resolves on one target. *Verify:* exactly one wins, the other gets a clear error.
 - [ ] Commit `feat(core): memory service with conflict handling`.
 
 ## M4 — MCP server
