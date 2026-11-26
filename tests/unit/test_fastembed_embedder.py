@@ -7,6 +7,7 @@ import pytest
 from ctxbook.embeddings.base import Embedder
 from ctxbook.embeddings.fastembed_embedder import DEFAULT_DIM, FastembedEmbedder
 from ctxbook.errors import EmbeddingUnavailableError
+from tests.conftest import requires_fastembed
 
 
 def test_constructing_does_not_load_the_model(tmp_path: Path) -> None:
@@ -15,6 +16,7 @@ def test_constructing_does_not_load_the_model(tmp_path: Path) -> None:
     assert embedder._model is None  # type: ignore[attr-defined]
 
 
+@requires_fastembed
 def test_offline_error_is_explained(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     import fastembed
 
@@ -38,6 +40,7 @@ def test_missing_package_is_explained(tmp_path: Path, monkeypatch: pytest.Monkey
         FastembedEmbedder(tmp_path).load()
 
 
+@requires_fastembed
 def test_no_announcement_when_already_cached(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -53,6 +56,7 @@ def test_no_announcement_when_already_cached(
     assert messages == []
 
 
+@requires_fastembed
 @pytest.mark.slow
 def test_real_model_downloads_once_and_keeps_stdout_clean(
     tmp_path: Path, capfd: pytest.CaptureFixture[str]

@@ -8,6 +8,7 @@ from typer.testing import CliRunner
 
 from ctxbook.cli.main import app
 from ctxbook.storage.sqlite_store import SqliteStore
+from tests.conftest import requires_fastembed
 
 
 @pytest.mark.parametrize("host", ["0.0.0.0", "192.168.1.5", "example.com"])
@@ -34,6 +35,7 @@ async def test_serve_stdio_end_to_end(home: Path) -> None:
     assert (home / "memory.db").exists()
 
 
+@requires_fastembed
 def test_serve_explains_embedding_mismatch(runner: CliRunner, home: Path) -> None:
     home.mkdir(parents=True)
     SqliteStore(home / "memory.db", embed_model="some-other-model", embed_dim=768).close()

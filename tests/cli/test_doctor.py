@@ -10,7 +10,7 @@ from ctxbook.cli.main import app
 from ctxbook.core.service import MemoryService
 from ctxbook.paths import resolve_paths
 from ctxbook.storage.sqlite_store import SqliteStore
-from tests.conftest import T0
+from tests.conftest import FASTEMBED_INSTALLED, SQLITE_VEC_AVAILABLE, T0
 
 
 def _by_name(home: Path, now: datetime = T0) -> dict[str, doctor.Check]:
@@ -22,7 +22,8 @@ def test_fresh_install_creates_nothing(home: Path, runner: CliRunner) -> None:
 
     assert result.exit_code == 0, result.output
     assert "not created yet" in result.output
-    assert "not downloaded yet" in result.output
+    expected = "not downloaded yet" if FASTEMBED_INSTALLED else "search is keyword-only"
+    assert expected in result.output
     assert not home.exists()  # doctor never creates files
 
 
@@ -38,7 +39,7 @@ def test_reports_counts_and_backend(home: Path) -> None:
 
     assert "1 active" in checks["Database"].detail
     assert "1 superseded" in checks["Database"].detail
-    assert checks["Vector search"].level == "ok"
+    assert checks["Vector search"].level == ("ok" if SQLITE_VEC_AVAILABLE else "warn")
 
 
 def test_fallback_mode_is_reported(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:

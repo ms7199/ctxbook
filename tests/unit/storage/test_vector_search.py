@@ -6,7 +6,7 @@ import pytest
 from ctxbook.errors import EmbeddingMismatchError
 from ctxbook.models import Status
 from ctxbook.storage.sqlite_store import SqliteStore
-from tests.conftest import T0, StoreFactory, at
+from tests.conftest import T0, StoreFactory, at, requires_sqlite_vec
 
 ACTIVE = [Status.ACTIVE]
 
@@ -99,6 +99,7 @@ def test_keyword_only_store_has_no_vector_search(make_store: StoreFactory) -> No
         store.set_vector(1, [1, 0, 0])
 
 
+@requires_sqlite_vec
 def test_backends_return_same_top_results(tmp_path: Path) -> None:
     """CLAUDE.md section 11: sqlite-vec and the numpy fallback must agree."""
     rng = np.random.default_rng(seed=7)

@@ -6,7 +6,7 @@ import sqlite_vec
 
 from ctxbook.models import Status
 from ctxbook.storage.sqlite_store import SqliteStore
-from tests.conftest import T0
+from tests.conftest import T0, requires_sqlite_vec
 
 
 def test_extension_failure_falls_back_to_numpy_with_one_warning(
@@ -34,6 +34,7 @@ def test_extension_failure_falls_back_to_numpy_with_one_warning(
     store.close()
 
 
+@requires_sqlite_vec
 def test_switching_backend_reports_vectors_to_backfill(tmp_path: Path) -> None:
     """A DB written with sqlite-vec and reopened in fallback mode needs re-embedding."""
     path = tmp_path / "m.db"

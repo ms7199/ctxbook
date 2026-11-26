@@ -8,6 +8,11 @@ on:
 permissions:
   contents: read
 
+env:
+  # Use uv's own Python everywhere. Runner-preinstalled Pythons (e.g. /usr/local/bin/python3.12
+  # on macOS) cannot load SQLite extensions, which would silently test only the numpy fallback.
+  UV_PYTHON_PREFERENCE: only-managed
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
