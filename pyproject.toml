@@ -1,0 +1,78 @@
+[project]
+name = "ctxbook"
+version = "0.1.0.dev0"
+description = "Local-first shared memory for MCP clients, with versioned facts."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Gupta Mayank" }]
+requires-python = ">=3.11"
+keywords = ["mcp", "memory", "llm", "claude", "cursor", "sqlite", "embeddings"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "mcp>=2.3,<3",
+    "pydantic>=2.14",
+    "sqlite-vec>=0.1.9",
+    # No onnxruntime builds exist for Intel Macs on Python 3.14+, so fastembed is skipped
+    # there and ctxbook runs keyword-only (docs/decisions.md D17).
+    "fastembed>=0.9.1; sys_platform != 'darwin' or platform_machine != 'x86_64' or python_version < '3.14'",
+    "numpy>=1.26",
+    "typer>=0.29",
+    "platformdirs>=4",
+]
+
+[project.urls]
+Homepage = "https://github.com/ms7199/ctxbook"
+Issues = "https://github.com/ms7199/ctxbook/issues"
+
+[project.scripts]
+ctxbook = "ctxbook.cli.main:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff>=0.8",
+    "pre-commit>=4",
+]
+
+[tool.uv]
+# onnxruntime (via fastembed) stopped shipping Intel-Mac wheels after 1.23.2.
+# Requiring this environment makes the lock pick versions that install there too.
+required-environments = [
+    "sys_platform == 'darwin' and platform_machine == 'x86_64'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "sys_platform == 'win32' and platform_machine == 'AMD64'",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ctxbook"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+# Markdown code blocks are hand-written reference snippets, not project code.
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "slow: needs the real embedding model download (run with -m slow)",
+]
