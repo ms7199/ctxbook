@@ -1,4 +1,4 @@
-.PHONY: install test lint format eval eval-quick
+.PHONY: install test lint format eval eval-quick docs
 
 install:
 	uv sync
@@ -19,3 +19,6 @@ eval:
 
 eval-quick:
 	uv run python eval/run.py --quick
+
+docs:
+	uv run --group docs mkdocs build --strict

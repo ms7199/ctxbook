@@ -7,11 +7,11 @@
 A local-first, open-source memory server for Claude Code, Claude Desktop, Cursor, Antigravity
 and any other [MCP](https://modelcontextprotocol.io) client.
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ms7199/ctxbook/blob/main/LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![MCP](https://img.shields.io/badge/MCP-server-8A2BE2.svg)](https://modelcontextprotocol.io)
-[![Status: pre-release](https://img.shields.io/badge/status-pre--release-orange.svg)](docs/steps-v0.1.md)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Status: pre-release](https://img.shields.io/badge/status-pre--release-orange.svg)](https://github.com/ms7199/ctxbook/blob/main/docs/steps-v0.1.md)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/ms7199/ctxbook/blob/main/CONTRIBUTING.md)
 
 [Quickstart](#-quickstart) ·
 [How it works](#-how-it-works) ·
@@ -29,7 +29,7 @@ and any other [MCP](https://modelcontextprotocol.io) client.
 > tools, and the `serve` / `save` / `export` / `import` / `doctor` commands.
 > **Also built:** `ctxbook init` (automatic setup for 4 AI tools) and `init --uninstall`.
 > **Next:** the evaluation, then the PyPI release.
-> Progress is tracked in [docs/steps-v0.1.md](docs/steps-v0.1.md). Until the release, use the GitHub install
+> Progress is tracked in [docs/steps-v0.1.md](https://github.com/ms7199/ctxbook/blob/main/docs/steps-v0.1.md). Until the release, use the GitHub install
 > shown in the Quickstart.
 
 ## 🤔 The problem
@@ -265,12 +265,12 @@ Found a vulnerability? Please report it privately via
 ## 📊 Evaluation
 
 Measured, not described. `make eval` reproduces every number below on a laptop, offline, with no
-API key (full tables: [eval/results/conflicts.md](eval/results/conflicts.md)).
+API key (full tables: [eval/results/conflicts.md](https://github.com/ms7199/ctxbook/blob/main/eval/results/conflicts.md)).
 
 **Dataset:** 120 cases across 12 simulated projects. In 91 of them a fact changes over time
 ("the user service uses MongoDB" → "the user service moved from MongoDB to Postgres"); 29 never
 change. Facts from other cases (including look-alikes that are both true) act as distractors.
-It is **synthetic**: generated from templates by [eval/build_conflicts.py](eval/build_conflicts.py)
+It is **synthetic**: generated from templates by [eval/build_conflicts.py](https://github.com/ms7199/ctxbook/blob/main/eval/build_conflicts.py)
 with a fixed seed. Each question asks for the *current* value.
 
 | Setup | Correct answer ranked first | Outdated answer ranked first | Outdated fact anywhere in top 5 |
@@ -367,7 +367,7 @@ Have an idea? [Open a discussion or issue](https://github.com/ms7199/ctxbook/iss
 ## 🤝 Contributing
 
 Contributions are very welcome, from typo fixes to new client integrations.
-See **[CONTRIBUTING.md](CONTRIBUTING.md)** for setup, workflow and guidelines.
+See **[CONTRIBUTING.md](https://github.com/ms7199/ctxbook/blob/main/CONTRIBUTING.md)** for setup, workflow and guidelines.
 
 ```bash
 git clone https://github.com/ms7199/ctxbook.git
@@ -381,7 +381,7 @@ improving tool descriptions, and adding cases to the conflict eval set.
 
 ## 📄 License
 
-[MIT](LICENSE) © 2026 Gupta Mayank
+[MIT](https://github.com/ms7199/ctxbook/blob/main/LICENSE) © 2026 Gupta Mayank
 
 <div align="center">
 <sub>If ctxbook helps you, consider giving it a ⭐. It helps others find it.</sub>

@@ -111,8 +111,8 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 - [ ] Commit `feat(eval): evaluation harness and results`.
 
 ## M8 — Docs + release
-- [ ] **8.1** MkDocs site. *Verify:* `uv run mkdocs build --strict`.
+- [x] **8.1** MkDocs site. *Verify:* `uv run mkdocs build --strict`.
 - [ ] **8.2** README: real numbers, remove pre-release banner. *Verify:* every command in the quickstart run once.
-- [ ] **8.3** 👤 PyPI account + trusted publisher for the repo; release workflow on `v*` tags.
+- [ ] **8.3** 👤 PyPI account + trusted publisher for the repo; release workflow on `v*` tags. (Workflow written and dry-run locally 2026-11-27; PyPI/TestPyPI trusted-publisher setup is yours.)
 - [ ] **8.4** 👤 Approve and push tag `v0.1.0`. *Verify:* package on PyPI; `uvx ctxbook --version` from a clean dir.
 - [ ] **8.5** Clean-machine end-to-end `uvx ctxbook init`. *Verify:* fact shared between two clients.

@@ -1,0 +1,47 @@
+site_name: ctxbook
+site_description: Local-first shared memory for MCP clients, with versioned facts.
+repo_url: https://github.com/ms7199/ctxbook
+repo_name: ms7199/ctxbook
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: {icon: material/weather-night, name: Dark mode}
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: {icon: material/weather-sunny, name: Light mode}
+  features:
+    - content.code.copy
+    - navigation.sections
+    - navigation.top
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.snippets:
+      base_path: ["."]
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Setup: setup.md
+  - MCP tools: tools.md
+  - How it works: how-it-works.md
+  - Evaluation: evaluation.md
+  - Troubleshooting: troubleshooting.md
+  - Project:
+      - v0.1 plan: plan-v0.1.md
+      - Step checklist: steps-v0.1.md
+      - Decisions: decisions.md
