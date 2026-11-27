@@ -62,6 +62,7 @@ Versions below are what was installed and tested on 2026-11-26. Use them as lowe
 | uv | 0.11 | project and install tool |
 
 **Intel Mac (x86_64) [verified 2026-11-26 via PyPI file lists and `uv sync`]:** onnxruntime's last Intel-Mac wheels are **1.23.2** (cp310–cp313); 1.24+ ships none. fastembed 0.9.1 accepts 1.23.2 on Python 3.11–3.13 but requires `>=1.24.2` on 3.14, so fastembed **cannot install on Intel Mac + Python 3.14+**. Handled by a dependency marker + `tool.uv.required-environments` in `pyproject.toml` (decision D17). Code must treat fastembed as possibly missing (ImportError -> keyword-only with a clear message).
+Same story for **cryptography** (pulled in by `mcp` -> `pyjwt[crypto]`): no Intel-Mac wheels after **48.0.1** (50.x ships arm64 only), so without a constraint Intel Macs compile it and need Rust. `pyproject.toml` pins `cryptography<49` on Intel Macs only (decision D21) [verified 2026-11-27: install failed in a home folder without Rust, succeeded after the constraint].
 
 Dev: pytest, Ruff (lint + format), pre-commit. Ruff 0.17 also formats code blocks inside Markdown, so `*.md` is excluded in `pyproject.toml`. Docs: MkDocs Material. CI/CD: GitHub Actions; release to PyPI on version tag. Docker is deferred to v0.2 (decision D11).
 Also direct dependencies: `platformdirs` (data/cache paths, decision D7) and `numpy` (vector fallback).

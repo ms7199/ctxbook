@@ -25,6 +25,9 @@ dependencies = [
     # there and ctxbook runs keyword-only (docs/decisions.md D17).
     "fastembed>=0.9.1; sys_platform != 'darwin' or platform_machine != 'x86_64' or python_version < '3.14'",
     "numpy>=1.26",
+    # cryptography (via mcp -> pyjwt[crypto]) has no Intel-Mac wheels after 48.0.1; without
+    # this, Intel Macs compile it from source and need Rust (decision D21).
+    "cryptography<49; sys_platform == 'darwin' and platform_machine == 'x86_64'",
     "typer>=0.29",
     "platformdirs>=4",
 ]
