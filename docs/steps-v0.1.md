@@ -92,13 +92,13 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 - [ ] Commit `feat(cli): serve, save, export, import, doctor`.
 
 ## M6 — `init`
-- [ ] **6.1** Shared pieces: backup, JSON merge, marker blocks. *Verify:* unit tests (malformed JSON aborts, no write).
-- [ ] **6.2** Claude Code adapter (`claude mcp add`, mocked in tests). *Verify:* tests on fake home.
-- [ ] **6.3** Claude Desktop adapter. *Verify:* tests on fake home (macOS + Windows paths).
-- [ ] **6.4** Cursor adapter (`mcp.json` + `.mdc` rule). *Verify:* tests.
-- [ ] **6.5** Antigravity adapter. *Verify:* tests.
-- [ ] **6.6** `init` flow: detect, preview, confirm, `--yes`; running twice changes nothing. *Verify:* tests.
-- [ ] **6.7** `init --uninstall` restores originals. *Verify:* byte-for-byte comparison test.
+- [x] **6.1** Shared pieces: backup, JSON merge, marker blocks. *Verify:* unit tests (malformed JSON aborts, no write).
+- [x] **6.2** Claude Code adapter (`claude mcp add`, mocked in tests). *Verify:* tests on fake home.
+- [x] **6.3** Claude Desktop adapter. *Verify:* tests on fake home (macOS + Windows paths).
+- [x] **6.4** Cursor adapter (`mcp.json` + `.mdc` rule). *Verify:* tests.
+- [x] **6.5** Antigravity adapter. *Verify:* tests.
+- [x] **6.6** `init` flow: detect, preview, confirm, `--yes`; running twice changes nothing. *Verify:* tests.
+- [x] **6.7** `init --uninstall` restores originals. *Verify:* byte-for-byte comparison test.
 - [ ] **6.8** 👤 Real run on your Mac, then confirm a fact saved in one app is found in another.
 - [ ] Commit `feat(cli): init and uninstall for four clients`.
 

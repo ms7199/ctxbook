@@ -138,6 +138,77 @@ def export_(
 
 
 @app.command()
+def init(
+    uninstall: Annotated[
+        bool, typer.Option("--uninstall", help="Remove exactly what init added.")
+    ] = False,
+    yes: Annotated[bool, typer.Option("--yes", "-y", help="Don't ask for confirmation.")] = False,
+    no_embeddings: NoEmbeddings = False,
+    allow_tools: Annotated[
+        bool,
+        typer.Option(
+            "--allow-tools", help="Claude Code: allow ctxbook tools without approval prompts."
+        ),
+    ] = False,
+    source: Annotated[
+        str | None,
+        typer.Option(help="Where AI clients install ctxbook from (default: auto-detected)."),
+    ] = None,
+) -> None:
+    """Set up Claude Code, Claude Desktop, Cursor and Antigravity to use ctxbook."""
+    from ctxbook.cli.setup.env import SetupEnv
+    from ctxbook.cli.setup.launch import current_source, find_uvx, server_command
+    from ctxbook.cli.setup.run import run_init, run_uninstall
+    from ctxbook.paths import resolve_paths
+
+    env = SetupEnv.current()
+    data_dir = resolve_paths().data_dir
+    try:
+        if uninstall:
+            run_uninstall(env, data_dir, yes=yes, confirm=typer.confirm, echo=typer.echo)
+            return
+        command = server_command(
+            find_uvx(env.which), source or current_source(), no_embeddings=no_embeddings
+        )
+        plans = run_init(
+            env,
+            data_dir,
+            command,
+            allow_tools=allow_tools,
+            yes=yes,
+            confirm=typer.confirm,
+            echo=typer.echo,
+        )
+    except CtxbookError as exc:
+        raise _fail(str(exc)) from exc
+    if not plans:
+        return
+    if not no_embeddings:
+        _download_model()
+    notes = [note for plan in plans for note in plan.notes]
+    if notes:
+        typer.echo("\nManual steps:")
+        for note in notes:
+            typer.echo(f"- {note}")
+    typer.echo("\nRestart your AI apps, then tell one a fact and ask another.")
+
+
+def _download_model() -> None:
+    """Fetch the embedding model now so the first tool call is fast (shared cache folder)."""
+    from ctxbook.cli.runtime import fastembed_installed
+    from ctxbook.embeddings.fastembed_embedder import FastembedEmbedder
+    from ctxbook.paths import resolve_paths
+
+    if not fastembed_installed():
+        typer.echo("The embedding model will be downloaded by the server on first use.")
+        return
+    try:
+        FastembedEmbedder(resolve_paths().model_cache_dir, notify=typer.echo).load()
+    except CtxbookError as exc:
+        typer.secho(f"Warning: {exc}", fg=typer.colors.YELLOW, err=True)
+
+
+@app.command()
 def doctor() -> None:
     """Check storage, vector search, embeddings and pending facts (changes nothing)."""
     from ctxbook.cli.doctor import run_checks

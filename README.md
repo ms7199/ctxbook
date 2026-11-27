@@ -27,9 +27,10 @@ and any other [MCP](https://modelcontextprotocol.io) client.
 > **🚧 Pre-release.** ctxbook is being built in the open and **v0.1 is not on PyPI yet**.
 > **Built and tested so far:** storage with fact history, hybrid search, conflict handling, the 6 MCP
 > tools, and the `serve` / `save` / `export` / `import` / `doctor` commands.
-> **Next:** `ctxbook init` (automatic client setup), the evaluation, then the PyPI release.
-> Progress is tracked in [docs/steps-v0.1.md](docs/steps-v0.1.md). Until the release, the `uvx` commands
-> below won't work yet; to try it now, [run it from source](#-contributing).
+> **Also built:** `ctxbook init` (automatic setup for 4 AI tools) and `init --uninstall`.
+> **Next:** the evaluation, then the PyPI release.
+> Progress is tracked in [docs/steps-v0.1.md](docs/steps-v0.1.md). Until the release, use the GitHub install
+> shown in the Quickstart.
 
 ## 🤔 The problem
 
@@ -84,12 +85,27 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 uvx ctxbook init
 ```
 
+> [!NOTE]
+> **Until the PyPI release**, install straight from GitHub instead:
+> `uvx --from git+https://github.com/ms7199/ctxbook ctxbook init`
+> (`init` notices where it was installed from and sets your AI tools up the same way.)
+
 `init` will:
 
 1. Detect which AI tools you have installed.
 2. Show you exactly which files it will change, and ask before writing.
-3. Back up every file it touches.
+3. Back up every file it touches (`<file>.ctxbook-backup-<time>`, next to the original).
 4. Register the ctxbook server and add a short "use memory" rule to each tool.
+5. Download the embedding model once, so the first search is fast.
+
+| Tool | Server registered in | Memory rule |
+|---|---|---|
+| Claude Code | `claude mcp add --scope user` (if `claude` isn't on your PATH, `init` prints the command to run) | `~/.claude/CLAUDE.md` |
+| Claude Desktop | `claude_desktop_config.json` (restart Claude Desktop) | Sent by the server itself |
+| Cursor | `~/.cursor/mcp.json` | Printed for you to paste into *Settings → Rules → User Rules* |
+| Antigravity | `~/.gemini/config/mcp_config.json` | `~/.gemini/AGENTS.md` |
+
+The server always runs on uv's own Python 3.12, so it works the same on every machine.
 
 **3. Restart your AI tools.** That's it. Tell one of them a fact, then ask another.
 
@@ -225,7 +241,9 @@ Use stdio with `uvx ctxbook serve`, or Streamable HTTP with
 | Command | Purpose |
 |---|---|
 | `ctxbook init` | Detect and configure your AI tools (asks first, backs up files). |
-| `ctxbook init --uninstall` | Remove exactly what `init` added. |
+| `ctxbook init --uninstall` | Remove exactly what `init` added (untouched files are restored byte for byte). |
+| `ctxbook init --allow-tools` | Also let Claude Code use ctxbook tools without approval prompts. |
+| `ctxbook init --yes` | Skip the confirmation (for scripts). |
 | `ctxbook serve` | Run the MCP server (stdio by default). |
 | `ctxbook save "fact" --scope myproject` | Save a fact by hand. |
 | `ctxbook export` / `ctxbook import` | Back up or move your memory. |

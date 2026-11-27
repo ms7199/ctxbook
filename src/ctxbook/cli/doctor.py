@@ -35,7 +35,17 @@ def run_checks(paths: Paths | None = None, now: datetime | None = None) -> list[
     checks = [Check("info", "ctxbook", __version__), Check("info", "Python", python)]
     checks += _storage_checks(paths, now)
     checks += _embedding_checks(paths)
+    checks.append(_client_check(paths))
     return checks
+
+
+def _client_check(paths: Paths) -> Check:
+    from ctxbook.cli.setup.run import configured_clients
+
+    clients = configured_clients(paths.data_dir)
+    if clients:
+        return Check("ok", "AI clients set up by init", ", ".join(clients))
+    return Check("info", "AI clients", "none set up yet: run `ctxbook init`")
 
 
 def _storage_checks(paths: Paths, now: datetime) -> list[Check]:
