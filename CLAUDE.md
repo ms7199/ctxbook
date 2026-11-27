@@ -244,7 +244,7 @@ The rule text (same everywhere, also used as the server `instructions`):
 ## 12. Evaluation (the interview story)
 - Compare: (a) plain vector search baseline, (b) hybrid search, (c) hybrid + conflict handling, (d) keyword-only mode.
 - **LongMemEval** (ICLR 2025): 500 questions testing five abilities, one of which is **knowledge updates** (question type `knowledge-update`), the exact problem ctxbook targets. Data: Hugging Face `xiaowu0162/longmemeval-cleaned`; code: github.com/xiaowu0162/LongMemEval. Files: `longmemeval_s` (about 115k tokens per question), `longmemeval_m`, `longmemeval_oracle` (evidence sessions only).
-- **Important:** LongMemEval provides **chat sessions**, but ctxbook stores **facts**. The harness needs an extraction step (an LLM turns sessions into `save_memory` calls) before retrieval can be scored. That step costs API money: start with the `knowledge-update` questions and the `oracle` file to keep it small, and record the extraction model used. **[unverified]** dataset license; check before redistributing any of it.
+- **Important:** LongMemEval provides **chat sessions**, but ctxbook stores **facts**. The harness needs an extraction step (an LLM turns sessions into `save_memory` calls) before retrieval can be scored. That step costs API money: start with the `knowledge-update` questions and the `oracle` file to keep it small, and record the extraction model used. Dataset license: **MIT** (HF dataset tag and GitHub repo license, checked 2026-11-27; decision D14). `longmemeval_oracle.json` is 15.4 MB.
 - Plus our own conflict set (100-200 cases of facts that change over time).
 - Metrics: recall@k, precision, **stale-fact error rate**, latency. Also measure how often an AI actually calls save/search given the init rule.
 - Results go in `eval/results/` and the README. Never invent numbers; only report what the harness produced.
@@ -289,5 +289,4 @@ The rule text (same everywhere, also used as the server `instructions`):
 - Whether Claude Desktop, Cursor and Antigravity pass the server `instructions` to the model.
 - The exact client-info names each app sends (needed for nice `source_app` labels).
 - Cursor global User Rules file location; Antigravity `rules/*.md` trigger values.
-- LongMemEval dataset license.
 - Hooks support per client (v0.2 only).
