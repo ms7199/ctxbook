@@ -1,4 +1,4 @@
-.PHONY: install test lint format eval
+.PHONY: install test lint format eval eval-quick
 
 install:
 	uv sync
@@ -15,4 +15,7 @@ format:
 	uv run ruff format .
 
 eval:
-	@echo "No evaluation yet: the harness arrives in milestone M7 (docs/steps-v0.1.md)."
+	uv run python eval/run.py
+
+eval-quick:
+	uv run python eval/run.py --quick

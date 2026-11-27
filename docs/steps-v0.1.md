@@ -104,10 +104,10 @@ The execution version of [plan-v0.1.md](plan-v0.1.md). Each step is small, and i
 
 ## M7 — Evaluation
 - [ ] **7.1** 👤 Check LongMemEval license (D14). *Verify:* recorded in decisions.md.
-- [ ] **7.2** Own conflict set, 100–200 cases. *Verify:* schema-validated by a test.
-- [ ] **7.3** Harness: 4 configs, recall@k / precision / stale-fact error / latency. *Verify:* runs on a 5-case toy set.
+- [x] **7.2** Own conflict set, 100–200 cases. *Verify:* schema-validated by a test.
+- [x] **7.3** Harness: 4 configs, recall@k / precision / stale-fact error / latency. *Verify:* runs on a 5-case toy set.
 - [ ] **7.4** 👤 Extraction of LongMemEval knowledge-update (oracle) with an LLM — needs your API key; cached with model name.
-- [ ] **7.5** Full run, tune 0.60 / 0.95 thresholds, write `eval/results/`. *Verify:* `make eval` reproduces the numbers offline.
+- [ ] **7.5** Full run, tune 0.60 / 0.95 thresholds, write `eval/results/`. (Own conflict set done 2026-11-27: threshold 0.70, recency 0.02; LongMemEval part pending 7.1/7.4.) *Verify:* `make eval` reproduces the numbers offline.
 - [ ] Commit `feat(eval): evaluation harness and results`.
 
 ## M8 — Docs + release

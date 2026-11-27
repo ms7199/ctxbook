@@ -369,7 +369,9 @@ class MemoryService:
             {i: m.updated_at for i, m in memories.items() if m.status is Status.ACTIVE},
             self._clock(),
             rrf_k=cfg.rrf_k,
-            recency_weight=cfg.recency_weight,
+            recency_weight=(
+                cfg.recency_weight if self._embedder is not None else cfg.keyword_recency_weight
+            ),
             half_life_days=cfg.recency_half_life_days,
         )
         facts = [as_data(memories[i]) for i, _ in ranked[:limit]]

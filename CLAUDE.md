@@ -248,6 +248,7 @@ The rule text (same everywhere, also used as the server `instructions`):
 - Plus our own conflict set (100-200 cases of facts that change over time).
 - Metrics: recall@k, precision, **stale-fact error rate**, latency. Also measure how often an AI actually calls save/search given the init rule.
 - Results go in `eval/results/` and the README. Never invent numbers; only report what the harness produced.
+- **Status 2026-11-27:** own conflict set built (`eval/build_conflicts.py`, 120 synthetic cases) and measured (`eval/results/conflicts.md`, `make eval`). Tuned `similar_threshold` 0.70 and `recency_weight` 0.02 (keyword-only keeps 0.2). Conflict configs use an oracle resolver. LongMemEval (needs license check + API key for extraction) still to do.
 
 ## 13. How to work in this repo (workflow)
 1. For anything non-trivial, **write a short plan first** and wait for approval.

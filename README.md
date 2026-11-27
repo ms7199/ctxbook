@@ -264,14 +264,36 @@ Found a vulnerability? Please report it privately via
 
 ## 📊 Evaluation
 
-ctxbook will be measured, not just described. The harness compares plain vector search, hybrid search,
-hybrid + conflict handling, and keyword-only mode on:
+Measured, not described. `make eval` reproduces every number below on a laptop, offline, with no
+API key (full tables: [eval/results/conflicts.md](eval/results/conflicts.md)).
 
-- the **knowledge-update** questions from [LongMemEval](https://github.com/xiaowu0162/LongMemEval) (ICLR 2025), and
-- a custom set of facts that change over time.
+**Dataset:** 120 cases across 12 simulated projects. In 91 of them a fact changes over time
+("the user service uses MongoDB" → "the user service moved from MongoDB to Postgres"); 29 never
+change. Facts from other cases (including look-alikes that are both true) act as distractors.
+It is **synthetic**: generated from templates by [eval/build_conflicts.py](eval/build_conflicts.py)
+with a fixed seed. Each question asks for the *current* value.
 
-Metrics: recall@k, precision, **stale-fact error rate** and latency.
-**Results will appear here once the harness has produced them**; no numbers are published before that.
+| Setup | Correct answer ranked first | Outdated answer ranked first | Outdated fact anywhere in top 5 |
+|---|---|---|---|
+| Vector search only (baseline) | 40.8% | 74.7% | 98.9% |
+| Hybrid search + strong recency boost (0.2), no conflict handling | 88.3% | 0.0% | 100.0% |
+| **ctxbook: hybrid + conflict handling** | **96.7%** | **0.0%** | **0.0%** |
+| ctxbook, keyword-only mode (no model) | 81.7% | 0.0% | 17.6% |
+
+- Without conflict handling, the outdated fact stays in the top 5 in **100%** of cases at every
+  recency setting: recency can reorder results, but only conflict handling removes stale facts.
+- Conflict handling caught **100%** of changed facts; **12.5%** of other saves were flagged for the
+  AI to double-check (false alarms).
+- Search takes about 10 ms and a save about 10 ms on an Intel Mac (bge-small, CPU).
+- The conflict rows use an *oracle* AI that always settles a flagged conflict correctly, so they
+  measure what ctxbook detects and retrieves; how well a real model settles conflicts is measured
+  next, on LongMemEval.
+
+What the evaluation changed: it tuned the conflict threshold (0.60 → 0.70: false alarms 42% → 12.5%
+with no missed changes) and showed that once outdated facts are removed, a strong recency boost
+*hurts* (it let recent but irrelevant facts win), so ctxbook now uses recency only to break ties.
+Because the dataset is synthetic, these settings will be re-checked on
+[LongMemEval](https://github.com/xiaowu0162/LongMemEval) (ICLR 2025, knowledge-update questions).
 
 ## ❓ FAQ
 
